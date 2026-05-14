@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>UltraTiers Player Tiers</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <main class="container">
+    <header>
+      <h1>UltraTiers Player Tiers</h1>
+      <p>Browse all players and their tiers from Supabase.</p>
+    </header>
+
+    <section class="controls">
+      <div class="control-row">
+        <label for="search">Search IGN</label>
+        <input id="search" type="search" placeholder="Search by IGN" />
+      </div>
+      <div class="control-row">
+        <label for="region">Region</label>
+        <select id="region">
+          <option value="">All regions</option>
+          <option value="EU">EU</option>
+          <option value="NA">NA</option>
+        </select>
+      </div>
+      <div class="control-row">
+        <label for="mode">Mode</label>
+        <select id="mode">
+          <option value="">All modes</option>
+          <option value="Axe">Axe</option>
+          <option value="Sword">Sword</option>
+          <option value="Vanilla">Vanilla</option>
+          <option value="NethOP">NethOP</option>
+          <option value="Pot">Pot</option>
+          <option value="UHC">UHC</option>
+          <option value="SMP">SMP</option>
+          <option value="Mace">Mace</option>
+        </select>
+      </div>
+      <div class="control-row button-row">
+        <button id="refresh">Refresh</button>
+      </div>
+    </section>
+
+    <section class="status" id="status">Loading players...</section>
+
+    <section class="table-wrap">
+      <table id="players-table">
+        <thead>
+          <tr>
+            <th>IGN</th>
+            <th>Region</th>
+            <th>Tiers</th>
+            <th>Last Tested</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </section>
+
+    <footer>
+      <p>Website reads from the <strong>players</strong> table in Supabase.</p>
+      <p>Fill in <code>config.js</code> with your Supabase URL and anon key.</p>
+    </footer>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/supabase.min.js"></script>
+  <script type="module" src="app.js"></script>
+</body>
+</html>
