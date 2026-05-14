@@ -55,7 +55,7 @@ function renderPlayers() {
 function renderTesters() {
   testersTableBody.innerHTML = testers.map(tester => `
     <tr>
-      <td>${tester.ign || 'Unknown'}</td>
+      <td>${tester.ign || tester.name || 'Unknown'}</td>
       <td>${tester.discord_id || 'N/A'}</td>
       <td>${tester.role || 'tester'}</td>
       <td>${formatDate(tester.joined_date)}</td>
@@ -90,7 +90,7 @@ async function loadPlayers() {
 async function loadTesters() {
   const { data, error } = await supabase
     .from('testers')
-    .select('id, ign, discord_id, role, joined_date')
+    .select('id, ign, discord_id, role, joined_date, mode, region')
     .order('joined_date', { ascending: false });
 
   if (error) {
