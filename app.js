@@ -3,6 +3,7 @@ import { SUPABASE_URL, SUPABASE_ANON_KEY } from './config.js';
 
 const statusEl = document.getElementById('status');
 const tableBody = document.querySelector('#players-table tbody');
+const testersTableBody = document.querySelector('#testers-table tbody');
 const searchInput = document.getElementById('search');
 const regionSelect = document.getElementById('region');
 const modeSelect = document.getElementById('mode');
@@ -10,6 +11,7 @@ const refreshButton = document.getElementById('refresh');
 
 const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 let players = [];
+let testers = [];
 
 function formatDate(value) {
   if (!value) return 'Unknown';
@@ -50,6 +52,17 @@ function renderPlayers() {
   statusEl.textContent = `Showing ${filtered.length} of ${players.length} players.`;
 }
 
+function renderTesters() {
+  testersTableBody.innerHTML = testers.map(tester => `
+    <tr>
+      <td>${tester.ign || 'Unknown'}</td>
+      <td>${tester.discord_id || 'N/A'}</td>
+      <td>${tester.role || 'tester'}</td>
+      <td>${formatDate(tester.joined_date)}</td>
+    </tr>
+  `).join('');
+}
+
 async function loadPlayers() {
   if (!SUPABASE_URL || !SUPABASE_ANON_KEY || SUPABASE_URL.includes('YOUR_') || SUPABASE_ANON_KEY.includes('YOUR_')) {
     statusEl.textContent = 'Please configure SUPABASE_URL and SUPABASE_ANON_KEY in config.js.';
@@ -71,6 +84,22 @@ async function loadPlayers() {
 
   players = Array.isArray(data) ? data : [];
   renderPlayers();
+  await loadTesters();
+}
+
+async function loadTesters() {
+  const { data, error } = await supabase
+    .from('testers')
+    .select('id, ign, discord_id, role, joined_date')
+    .order('joined_date', { ascending: false });
+
+  if (error) {
+    console.error('Failed to load testers:', error);
+    return;
+  }
+
+  testers = Array.isArray(data) ? data : [];
+  renderTesters();
 }
 
 searchInput.addEventListener('input', renderPlayers);
