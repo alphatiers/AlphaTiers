@@ -1,7 +1,7 @@
 {
   "name": "ultratier-website",
   "version": "1.0.0",
-  "description": "UltraTiers player and tester display website",
+  "description": "AlphaTiers player and tester display website",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
