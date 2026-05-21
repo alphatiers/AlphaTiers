@@ -1,88 +1,55 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>AlphaTiers Player Tiers</title>
-  <link rel="stylesheet" href="styles.css" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AlphaTiers</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <main class="container">
-    <header>
-      <h1>AlphaTiers Player Tiers</h1>
-      <p>Browse all players and their tiers from the storage, currently staff only.</p>
-    </header>
+<header>
+    <nav class="navbar">
+        <div class="logo">AlphaTiers</div>
+        <ul class="nav-links" id="navLinks">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="tiers.html">Tiers</a></li>
+        </ul>
+        <div class="burger" id="burger">
+            <div></div><div></div><div></div>
+        </div>
+    </nav>
+</header>
 
-    <section class="controls">
-      <div class="control-row">
-        <label for="search">Search IGN</label>
-        <input id="search" type="search" placeholder="Search by IGN" />
-      </div>
-      <div class="control-row">
-        <label for="region">Region</label>
-        <select id="region">
-          <option value="">All regions</option>
-          <option value="EU">EU</option>
-          <option value="NA">NA</option>
-        </select>
-      </div>
-      <div class="control-row">
-        <label for="mode">Mode</label>
-        <select id="mode">
-          <option value="">All modes</option>
-          <option value="Axe">Axe</option>
-          <option value="Sword">Sword</option>
-          <option value="Vanilla">Vanilla</option>
-          <option value="NethOP">NethOP</option>
-          <option value="Pot">Pot</option>
-          <option value="UHC">UHC</option>
-          <option value="SMP">SMP</option>
-          <option value="Mace">Mace</option>
-        </select>
-      </div>
-      <div class="control-row button-row">
-        <button id="refresh">Refresh</button>
-      </div>
+<main>
+    <section class="hero hero-fade">
+        <div class="hero-fade-bg"></div>
+        <div class="overlay"></div>
+        <div class="hero-content">
+            <h1>Welcome to AlphaTiers</h1>
+            <p>The premier home for Minecraft player tiers and player rankings.</p>
+            <div class="hero-buttons">
+                <a href="tiers.html" class="btn">View Player Tiers</a>
+            </div>
+        </div>
     </section>
 
-    <section class="status" id="status">Loading players...</section>
-
-    <section class="table-wrap">
-      <h2>Players</h2>
-      <table id="players-table">
-        <thead>
-          <tr>
-            <th>IGN</th>
-            <th>Region</th>
-            <th>Tiers</th>
-            <th>Last Tested</th>
-          </tr>
-        </thead>
-        <tbody></tbody>
-      </table>
+    <section id="about" class="section about-alpha">
+        <div class="about-bg"></div>
+        <div class="about-content">
+            <h2>About AlphaTiers</h2>
+            <p>
+                AlphaTiers is a ranking system made to show how good players are at Minecraft PvP. It tracks how players perform across different PvP modes and gives them points based on their skill and consistency. This creates a clear tierlist that shows who the best players are in each mode and category.
+            </p>
+        </div>
     </section>
+</main>
 
-    <section class="table-wrap">
-      <h2>Testers</h2>
-      <table id="testers-table">
-        <thead>
-          <tr>
-            <th>IGN</th>
-            <th>Discord ID</th>
-            <th>Role</th>
-            <th>Joined Date</th>
-          </tr>
-        </thead>
-        <tbody></tbody>
-      </table>
-    </section>
+<footer>
+    <p>&copy; 2026 AlphaTiers, all rights reserved. Made by CooperPanicked.</p>
+</footer>
 
-    <footer>
-      <p>Website reads from the <strong>players</strong> and <strong>testers</strong> tables in storage.</p>
-    </footer>
-  </main>
-
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/supabase.min.js"></script>
-  <script type="module" src="app.js"></script>
+<script src="script.js"></script>
 </body>
 </html>

@@ -1,17 +1,12 @@
 {
-  "name": "ultratier-website",
+  "name": "alphatiers-esports-website",
   "version": "1.0.0",
-  "description": "AlphaTiers player and tester display website",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js",
-    "dev": "node server.js"
+    "start": "node server.js"
   },
   "dependencies": {
-    "express": "^4.18.2",
-    "@supabase/supabase-js": "^2.39.0"
-  },
-  "engines": {
-    "node": ">=16.0.0"
+    "@supabase/supabase-js": "^2.29.0",
+    "express": "^4.18.2"
   }
 }
