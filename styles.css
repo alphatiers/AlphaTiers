@@ -131,7 +131,7 @@ header {
 
 .hero {
   height: 100vh;
-  background: url('AlphaTiers.jpg') center/cover no-repeat;
+  background: url('AlphaTiers.png') center/cover no-repeat;
   position: relative;
   display: flex;
   align-items: center;
