@@ -73,6 +73,8 @@ const RANK_CATEGORIES = [
 
 function getModeIconUrl(mode) {
   const key = String(mode || '').trim().toLowerCase();
+
+  if (key.includes('vanilla')) return MODE_IMAGE_URLS.Vanilla;
   if (key.includes('sword')) return MODE_IMAGE_URLS.Sword;
   if (key.includes('axe')) return MODE_IMAGE_URLS.Axe;
   if (key.includes('neth') || key.includes('helmet')) return MODE_IMAGE_URLS.NethOP;
@@ -80,6 +82,7 @@ function getModeIconUrl(mode) {
   if (key.includes('smp') || key.includes('ender')) return MODE_IMAGE_URLS.SMP;
   if (key.includes('uhc') || key.includes('lava')) return MODE_IMAGE_URLS.UHC;
   if (key.includes('mace')) return MODE_IMAGE_URLS.Mace;
+
   return null;
 }
 
