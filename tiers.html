@@ -65,13 +65,13 @@ const TIER_POINTS = {
 };
 
 const RANK_CATEGORIES = [
-  { min: 400, label: 'Combat Grandmaster', icon: 'fas fa-crown', description: 'Obtained 400+ total points.' },
-  { min: 250, label: 'Combat Master', icon: 'fas fa-shield', description: 'Obtained 250+ total points.' },
-  { min: 100, label: 'Combat Ace', icon: 'fas fa-star', description: 'Obtained 100+ total points.' },
-  { min: 50, label: 'Combat Specialist', icon: 'fas fa-bolt', description: 'Obtained 50+ total points.' },
-  { min: 20, label: 'Combat Cadet', icon: 'fas fa-user-graduate', description: 'Obtained 20+ total points.' },
-  { min: 10, label: 'Combat Novice', icon: 'fas fa-user', description: 'Obtained 10+ total points.' },
-  { min: 0, label: 'Rookie', icon: 'fas fa-seedling', description: 'Starting rank for players with less than 10 points.' }
+  { min: 400, label: 'Combat Grandmaster', icon: 'fas fa-crown' },
+  { min: 250, label: 'Combat Master', icon: 'fas fa-shield' },
+  { min: 100, label: 'Combat Ace', icon: 'fas fa-star' },
+  { min: 50, label: 'Combat Specialist', icon: 'fas fa-bolt' },
+  { min: 20, label: 'Combat Cadet', icon: 'fas fa-user-graduate' },
+  { min: 10, label: 'Combat Novice', icon: 'fas fa-user' },
+  { min: 0, label: 'Rookie', icon: 'fas fa-seedling' }
 ];
 
 function getModeIconUrl(mode) {
@@ -92,8 +92,9 @@ function getModeIconUrl(mode) {
 }
 
 const BOARD_TIERS = ['Tier 1', 'Tier 2', 'Tier 3', 'Tier 4', 'Tier 5'];
+
 const TIER_PRIORITY = [
-  'N/A',
+  'Unranked',
   'LT5', 'HT5',
   'LT4', 'HT4',
   'LT3', 'HT3',
@@ -108,20 +109,17 @@ function getTierScore(tierName) {
 
 function getBestTier(tiers) {
   if (!Array.isArray(tiers) || !tiers.length) {
-    return { tier: 'N/A', gamemode: 'Unknown' };
+    return { tier: 'Unranked', gamemode: 'N/A' };
   }
+
   return tiers.reduce((best, next) => {
     if (!next || typeof next !== 'object') return best;
+
     const currentScore = getTierScore(best.tier);
     const nextScore = getTierScore(next.tier);
-    return nextScore > currentScore ? next : best;
-  }, { tier: 'N/A', gamemode: 'Unknown' });
-}
 
-function getTierArrow(tier) {
-  if (/^HT/i.test(tier)) return 'ht';
-  if (/^LT/i.test(tier)) return 'lt';
-  return 'none';
+    return nextScore > currentScore ? next : best;
+  }, { tier: 'Unranked', gamemode: 'N/A' });
 }
 
 function getTierArrowIcon(tier) {
@@ -132,59 +130,81 @@ function getTierArrowIcon(tier) {
 
 function getPointsForTier(tier) {
   if (typeof tier !== 'string') return 0;
+
   const normalized = tier.replace(/\s+/g, '').toUpperCase();
+
   return TIER_POINTS[normalized] || 0;
 }
 
 function getTotalPoints(tiers) {
   if (!Array.isArray(tiers) || !tiers.length) return 0;
-  return tiers.reduce((sum, tier) => sum + getPointsForTier(tier?.tier), 0);
+
+  return tiers.reduce((sum, tier) => {
+    return sum + getPointsForTier(tier?.tier);
+  }, 0);
 }
 
 function getRankCategory(points) {
-  return RANK_CATEGORIES.find(category => points >= category.min) || RANK_CATEGORIES[RANK_CATEGORIES.length - 1];
+  return RANK_CATEGORIES.find(category => points >= category.min)
+    || RANK_CATEGORIES[RANK_CATEGORIES.length - 1];
 }
 
 function truncateUsername(name, maxLength = 6) {
   if (name.length > maxLength) {
     return name.slice(0, maxLength) + '...';
   }
+
   return name;
 }
 
 function normalizeTierGroup(tier) {
   if (typeof tier !== 'string') return 'Tier 5';
+
   const numericMatch = tier.match(/^(?:HT|LT)?\s*([1-5])$/i);
+
   if (numericMatch) {
     return `Tier ${numericMatch[1]}`;
   }
+
   const otherMatch = tier.match(/Tier\s*([1-5])/i);
+
   if (otherMatch) {
     return `Tier ${otherMatch[1]}`;
   }
+
   return 'Tier 5';
 }
 
 function getAvailableModes(players) {
   const modes = new Set();
+
   players.forEach(player => {
     const tiers = Array.isArray(player.tiers) ? player.tiers : [];
+
     tiers.forEach(item => {
       const mode = item?.gamemode || item?.mode;
+
       if (mode) modes.add(mode);
     });
   });
+
   return Array.from(modes);
 }
 
 function renderModeTab(name, active = false) {
-  return `<button class="mode-tab ${active ? 'active' : ''}" data-mode="${name}">${name}</button>`;
+  return `
+    <button class="mode-tab ${active ? 'active' : ''}" data-mode="${name}">
+      ${name}
+    </button>
+  `;
 }
 
 function renderPlayerItem(player, selectedMode) {
   const ign = player.ign || player.name || player.username || 'Unknown Player';
   const displayName = truncateUsername(ign);
+
   const tiers = Array.isArray(player.tiers) ? player.tiers : [];
+
   let tierItem;
 
   if (selectedMode === 'Overall') {
@@ -192,23 +212,32 @@ function renderPlayerItem(player, selectedMode) {
   } else {
     tierItem = tiers.find(item => {
       const modeName = (item?.gamemode || item?.mode || '').toLowerCase();
+
       return modeName === selectedMode.toLowerCase();
-    }) || { tier: 'N/A', gamemode: selectedMode };
+    }) || { tier: 'Unranked', gamemode: selectedMode };
   }
 
   const arrowHtml = getTierArrowIcon(tierItem.tier);
-  const tierLabel = tierItem.tier || 'N/A';
-  const gamemodeLabel = tierItem.gamemode || selectedMode;
+
+  const tierLabel =
+    !tierItem.tier || tierItem.tier === 'Unranked'
+      ? 'N/A'
+      : tierItem.tier;
 
   return `
     <article class="tier-player">
       <div class="player-meta">
         <img src="https://minotar.net/avatar/${ign}/36" alt="${ign}" class="player-avatar">
+
         <div>
           <strong>${displayName}</strong>
         </div>
       </div>
-      <span class="tier-pill"><span class="tier-arrow">${arrowHtml}</span> ${tierLabel}</span>
+
+      <span class="tier-pill">
+        <span class="tier-arrow">${arrowHtml}</span>
+        ${tierLabel}
+      </span>
     </article>
   `;
 }
@@ -217,11 +246,14 @@ function renderTierBoard(players, selectedMode) {
   tierBoard.classList.toggle('overall-active', selectedMode === 'Overall');
 
   let filtered = players;
+
   if (selectedMode !== 'Overall') {
     filtered = players.filter(player => {
       const tiers = Array.isArray(player.tiers) ? player.tiers : [];
+
       return tiers.some(item => {
         const modeName = (item?.gamemode || item?.mode || '').toLowerCase();
+
         return modeName === selectedMode.toLowerCase();
       });
     });
@@ -233,105 +265,169 @@ function renderTierBoard(players, selectedMode) {
   }
 
   if (selectedMode === 'Overall') {
-    // Overall tab shows ranked list layout
+
     filtered.sort((a, b) => {
       const pointsA = getTotalPoints(Array.isArray(a.tiers) ? a.tiers : []);
       const pointsB = getTotalPoints(Array.isArray(b.tiers) ? b.tiers : []);
+
       if (pointsB !== pointsA) return pointsB - pointsA;
 
       const bestTierA = getBestTier(Array.isArray(a.tiers) ? a.tiers : []).tier;
       const bestTierB = getBestTier(Array.isArray(b.tiers) ? b.tiers : []).tier;
+
       const tierScoreA = getTierScore(bestTierA);
       const tierScoreB = getTierScore(bestTierB);
+
       if (tierScoreB !== tierScoreA) return tierScoreB - tierScoreA;
 
       const nameA = (a.ign || a.name || a.username || '').toLowerCase();
       const nameB = (b.ign || b.name || b.username || '').toLowerCase();
+
       return nameA.localeCompare(nameB);
     });
 
-    tierBoard.innerHTML = `<div class="overall-ranking">${filtered.map((player, index) => {
-      const ign = player.ign || player.name || player.username || 'Unknown Player';
-      const tiers = Array.isArray(player.tiers) ? player.tiers : [];
-      const totalPoints = getTotalPoints(tiers);
-      const category = getRankCategory(totalPoints);
-      const tiersHtml = tiers.slice(0, 8).map(tier => {
-        const gamemode = tier?.gamemode || tier?.mode || 'Unknown';
-        const tierValue = tier?.tier || 'N/A';
-        const iconUrl = getModeIconUrl(gamemode);
-        const tierPoints = getPointsForTier(tierValue);
-        const iconContent = iconUrl
-          ? `<img src="${iconUrl}" alt="${gamemode}" class="tier-icon-img">`
-          : '⚔';
-        return `<span class="tier-icon" data-tooltip="${tierValue}">${iconContent}</span>`;
-      }).join('');
-      
-      const region = (player.region || player.Region || player.region?.toString() || 'Unknown').toUpperCase();
-      return `
-        <article class="ranking-row">
-          <div class="ranking-number">${index + 1}.</div>
-          <div class="ranking-player">
-            <img src="https://minotar.net/avatar/${ign}/48" alt="${ign}" class="player-avatar-lg">
-            <div>
-              <strong>${ign}</strong>
-              <div class="player-category"><i class="${category.icon}"></i> ${category.label}</div>
-            </div>
-          </div>
-          <div class="ranking-tiers">
-            ${tiersHtml}
-          </div>
-          <div class="ranking-region">${region}</div>
-        </article>
-      `;
-    }).join('')}</div>`;
+    tierBoard.innerHTML = `
+      <div class="overall-ranking">
+        ${filtered.map((player, index) => {
+
+          const ign = player.ign || player.name || player.username || 'Unknown Player';
+
+          const tiers = Array.isArray(player.tiers) ? player.tiers : [];
+
+          const totalPoints = getTotalPoints(tiers);
+
+          const category = getRankCategory(totalPoints);
+
+          const tiersHtml = tiers.slice(0, 8).map(tier => {
+
+            const gamemode = tier?.gamemode || tier?.mode || 'N/A';
+
+            const tierValue =
+              !tier?.tier || tier.tier === 'Unranked'
+                ? 'N/A'
+                : tier.tier;
+
+            const iconUrl = getModeIconUrl(gamemode);
+
+            const iconContent = iconUrl
+              ? `<img src="${iconUrl}" alt="${gamemode}" class="tier-icon-img">`
+              : '⚔';
+
+            return `
+              <span class="tier-icon" data-tooltip="${tierValue}">
+                ${iconContent}
+              </span>
+            `;
+          }).join('');
+
+          const region = (
+            player.region ||
+            player.Region ||
+            player.region?.toString() ||
+            'N/A'
+          ).toUpperCase();
+
+          return `
+            <article class="ranking-row">
+              <div class="ranking-number">${index + 1}.</div>
+
+              <div class="ranking-player">
+                <img src="https://minotar.net/avatar/${ign}/48" alt="${ign}" class="player-avatar-lg">
+
+                <div>
+                  <strong>${ign}</strong>
+
+                  <div class="player-category">
+                    <i class="${category.icon}"></i>
+                    ${category.label}
+                  </div>
+                </div>
+              </div>
+
+              <div class="ranking-tiers">
+                ${tiersHtml}
+              </div>
+
+              <div class="ranking-region">
+                ${region}
+              </div>
+            </article>
+          `;
+        }).join('')}
+      </div>
+    `;
+
   } else {
-    // Other tabs show tier column layout
+
     const grouped = BOARD_TIERS.reduce((acc, tierName) => {
       acc[tierName] = [];
       return acc;
     }, {});
 
     filtered.forEach(player => {
-      let tierValue = 'N/A';
+
+      let tierValue = 'Unranked';
+
       const tiers = Array.isArray(player.tiers) ? player.tiers : [];
+
       const playerModeTier = tiers.find(item => {
         const modeName = (item?.gamemode || item?.mode || '').toLowerCase();
+
         return modeName === selectedMode.toLowerCase();
       });
-      tierValue = playerModeTier?.tier || 'N/A';
+
+      tierValue = playerModeTier?.tier || 'Unranked';
+
       const column = normalizeTierGroup(tierValue);
+
       grouped[column].push(player);
     });
 
     const sortTierPlayers = playersList => playersList.slice().sort((a, b) => {
+
       const aTier = (Array.isArray(a.tiers) ? a.tiers : []).find(item => {
         const modeName = (item?.gamemode || item?.mode || '').toLowerCase();
+
         return modeName === selectedMode.toLowerCase();
-      })?.tier || 'N/A';
+      })?.tier || 'Unranked';
+
       const bTier = (Array.isArray(b.tiers) ? b.tiers : []).find(item => {
         const modeName = (item?.gamemode || item?.mode || '').toLowerCase();
+
         return modeName === selectedMode.toLowerCase();
-      })?.tier || 'N/A';
+      })?.tier || 'Unranked';
 
       const scoreA = getTierScore(aTier);
       const scoreB = getTierScore(bTier);
+
       if (scoreB !== scoreA) return scoreB - scoreA;
+
       const pointsA = getPointsForTier(aTier);
       const pointsB = getPointsForTier(bTier);
+
       if (pointsB !== pointsA) return pointsB - pointsA;
-      return (a.ign || a.name || a.username || '').localeCompare(b.ign || b.name || b.username || '');
+
+      return (a.ign || a.name || a.username || '')
+        .localeCompare(b.ign || b.name || b.username || '');
     });
 
     tierBoard.innerHTML = BOARD_TIERS.map(tierName => {
+
       const playersInTier = sortTierPlayers(grouped[tierName]);
+
       const content = playersInTier.length
         ? playersInTier.map(player => renderPlayerItem(player, selectedMode)).join('')
         : '<div class="no-players">No players in this tier</div>';
 
       return `
         <div class="tier-column">
-          <div class="tier-column-header">${tierName}</div>
-          <div class="tier-column-body">${content}</div>
+          <div class="tier-column-header">
+            ${tierName}
+          </div>
+
+          <div class="tier-column-body">
+            ${content}
+          </div>
         </div>
       `;
     }).join('');
@@ -339,17 +435,31 @@ function renderTierBoard(players, selectedMode) {
 }
 
 function setupModeTabs(players) {
+
   const availableModes = getAvailableModes(players);
-  const tabs = DEFAULT_MODES.concat(availableModes.filter(mode => !DEFAULT_MODES.includes(mode)));
-  modeTabs.innerHTML = tabs.map((mode, index) => renderModeTab(mode, index === 0)).join('');
+
+  const tabs = DEFAULT_MODES.concat(
+    availableModes.filter(mode => !DEFAULT_MODES.includes(mode))
+  );
+
+  modeTabs.innerHTML = tabs.map((mode, index) => {
+    return renderModeTab(mode, index === 0);
+  }).join('');
 
   modeTabs.addEventListener('click', event => {
+
     const button = event.target.closest('.mode-tab');
+
     if (!button) return;
 
     const selectedMode = button.dataset.mode;
-    modeTabs.querySelectorAll('.mode-tab').forEach(tab => tab.classList.remove('active'));
+
+    modeTabs.querySelectorAll('.mode-tab').forEach(tab => {
+      tab.classList.remove('active');
+    });
+
     button.classList.add('active');
+
     renderTierBoard(players, selectedMode);
   });
 
@@ -357,26 +467,41 @@ function setupModeTabs(players) {
 }
 
 async function loadTierData() {
+
   try {
+
     const response = await fetch(`${API_BASE_URL}/api/players`);
+
     if (!response.ok) {
       throw new Error('Network response was not ok');
     }
+
     const data = await response.json();
 
     if (!data || !data.length) {
-      tierSubtitle.textContent = 'No tier data found. Make sure your Render backend is running and the Supabase table contains player rows.';
-      tierBoard.innerHTML = '<div class="tier-empty">No tier data available.</div>';
+
+      tierBoard.innerHTML = `
+        <div class="tier-empty">
+          No tier data available.
+        </div>
+      `;
+
       return;
     }
+
     setupModeTabs(data);
+
   } catch (err) {
+
     console.error('Failed to load player tiers:', err);
-    tierSubtitle.textContent = 'Failed to load player tiers. Verify the backend URL and that your Render service is running.';
-    tierBoard.innerHTML = '<div class="tier-empty">Unable to fetch tiers from the backend.</div>';
+
+    tierBoard.innerHTML = `
+      <div class="tier-empty">
+        Unable to fetch tiers from the backend.
+      </div>
+    `;
   }
 }
 
 loadTierData();
 </script>
-
