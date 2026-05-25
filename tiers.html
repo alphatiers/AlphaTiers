@@ -145,7 +145,7 @@ function getRankCategory(points) {
   return RANK_CATEGORIES.find(category => points >= category.min) || RANK_CATEGORIES[RANK_CATEGORIES.length - 1];
 }
 
-function truncateUsername(name, maxLength = 7) {
+function truncateUsername(name, maxLength = 6) {
   if (name.length > maxLength) {
     return name.slice(0, maxLength) + '...';
   }
