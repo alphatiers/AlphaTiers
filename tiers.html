@@ -93,7 +93,7 @@ function getModeIconUrl(mode) {
 
 const BOARD_TIERS = ['Tier 1', 'Tier 2', 'Tier 3', 'Tier 4', 'Tier 5'];
 const TIER_PRIORITY = [
-  'Unranked',
+  'N/A',
   'LT5', 'HT5',
   'LT4', 'HT4',
   'LT3', 'HT3',
@@ -108,14 +108,14 @@ function getTierScore(tierName) {
 
 function getBestTier(tiers) {
   if (!Array.isArray(tiers) || !tiers.length) {
-    return { tier: 'Unranked', gamemode: 'Unknown' };
+    return { tier: 'N/A', gamemode: 'Unknown' };
   }
   return tiers.reduce((best, next) => {
     if (!next || typeof next !== 'object') return best;
     const currentScore = getTierScore(best.tier);
     const nextScore = getTierScore(next.tier);
     return nextScore > currentScore ? next : best;
-  }, { tier: 'Unranked', gamemode: 'Unknown' });
+  }, { tier: 'N/A', gamemode: 'Unknown' });
 }
 
 function getTierArrow(tier) {
@@ -193,11 +193,11 @@ function renderPlayerItem(player, selectedMode) {
     tierItem = tiers.find(item => {
       const modeName = (item?.gamemode || item?.mode || '').toLowerCase();
       return modeName === selectedMode.toLowerCase();
-    }) || { tier: 'Unranked', gamemode: selectedMode };
+    }) || { tier: 'N/A', gamemode: selectedMode };
   }
 
   const arrowHtml = getTierArrowIcon(tierItem.tier);
-  const tierLabel = tierItem.tier || 'Unranked';
+  const tierLabel = tierItem.tier || 'N/A';
   const gamemodeLabel = tierItem.gamemode || selectedMode;
 
   return `
@@ -257,7 +257,7 @@ function renderTierBoard(players, selectedMode) {
       const category = getRankCategory(totalPoints);
       const tiersHtml = tiers.slice(0, 8).map(tier => {
         const gamemode = tier?.gamemode || tier?.mode || 'Unknown';
-        const tierValue = tier?.tier || 'Unranked';
+        const tierValue = tier?.tier || 'N/A';
         const iconUrl = getModeIconUrl(gamemode);
         const tierPoints = getPointsForTier(tierValue);
         const iconContent = iconUrl
@@ -292,13 +292,13 @@ function renderTierBoard(players, selectedMode) {
     }, {});
 
     filtered.forEach(player => {
-      let tierValue = 'Unranked';
+      let tierValue = 'N/A';
       const tiers = Array.isArray(player.tiers) ? player.tiers : [];
       const playerModeTier = tiers.find(item => {
         const modeName = (item?.gamemode || item?.mode || '').toLowerCase();
         return modeName === selectedMode.toLowerCase();
       });
-      tierValue = playerModeTier?.tier || 'Unranked';
+      tierValue = playerModeTier?.tier || 'N/A';
       const column = normalizeTierGroup(tierValue);
       grouped[column].push(player);
     });
@@ -307,11 +307,11 @@ function renderTierBoard(players, selectedMode) {
       const aTier = (Array.isArray(a.tiers) ? a.tiers : []).find(item => {
         const modeName = (item?.gamemode || item?.mode || '').toLowerCase();
         return modeName === selectedMode.toLowerCase();
-      })?.tier || 'Unranked';
+      })?.tier || 'N/A';
       const bTier = (Array.isArray(b.tiers) ? b.tiers : []).find(item => {
         const modeName = (item?.gamemode || item?.mode || '').toLowerCase();
         return modeName === selectedMode.toLowerCase();
-      })?.tier || 'Unranked';
+      })?.tier || 'N/A';
 
       const scoreA = getTierScore(aTier);
       const scoreB = getTierScore(bTier);
