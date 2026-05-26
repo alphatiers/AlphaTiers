@@ -13,10 +13,12 @@ body {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+  padding-bottom: 1rem;
 }
 
 main {
-  flex: 1;
+  flex: 1 0 auto;
+  padding-bottom: 2rem;
 }
 
 a {
@@ -366,8 +368,9 @@ footer {
   color: #666;
   text-align: center;
   padding: 2rem 1rem;
-  margin-top: 2rem;
-  position: static;
+  margin-top: auto;
+  position: relative;
+  z-index: 1;
 }
 
 footer a {
@@ -830,7 +833,6 @@ footer a {
   gap: 0.75rem;
   align-items: center;
   width: 100%;
-  max-height: 1000px;
   margin: 0 auto;
   overflow-x: auto;
   overflow-y: visible;
