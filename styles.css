@@ -557,6 +557,8 @@ footer a {
   padding-left: 0.1rem;
   scrollbar-width: thin;
   scrollbar-color: #0066ff #111;
+  width: 1000px;
+  margin: auto;
 }
 
 .mode-tabs::-webkit-scrollbar {
