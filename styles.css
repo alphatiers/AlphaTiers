@@ -366,10 +366,8 @@ footer {
   color: #666;
   text-align: center;
   padding: 2rem 1rem;
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  width: 100%;
+  margin-top: 2rem;
+  position: static;
 }
 
 footer a {
@@ -564,12 +562,13 @@ footer a {
   margin: 1.75rem 0 1rem;
   overflow-x: auto;
   overflow-y: hidden;
-  padding-bottom: 0.45rem;
-  padding-left: 0.1rem;
+  padding: 0.25rem 0.15rem 0.75rem;
   scrollbar-width: thin;
   scrollbar-color: #0066ff #111;
-  width: 1000px;
-  margin: auto;
+  width: 100%;
+  max-width: 100%;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-inline: contain;
 }
 
 .mode-tabs::-webkit-scrollbar {
@@ -577,13 +576,14 @@ footer a {
 }
 
 .mode-tabs::-webkit-scrollbar-track {
-  background: #111;
+  background: rgba(17, 17, 17, 0.95);
   border-radius: 999px;
 }
 
 .mode-tabs::-webkit-scrollbar-thumb {
-  background: linear-gradient(90deg, #0066ff, #4aa3ff);
+  background: linear-gradient(90deg, #0066ff, #7cc8ff);
   border-radius: 999px;
+  border: 2px solid #111;
 }
 
 .mode-tab {

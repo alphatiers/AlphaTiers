@@ -302,14 +302,15 @@ function renderTierBoard(players, selectedMode) {
 
           const category = getRankCategory(totalPoints);
 
-          const tiersHtml = tiers.slice(0, 8).map(tier => {
+          const sortedTiers = [...tiers]
+            .filter(tier => tier && typeof tier === 'object' && tier.tier && tier.tier !== 'Unranked')
+            .sort((a, b) => getTierScore(b.tier) - getTierScore(a.tier))
+            .slice(0, 8);
 
+          const tiersHtml = sortedTiers.map(tier => {
             const gamemode = tier?.gamemode || tier?.mode || 'N/A';
 
-            const tierValue =
-              !tier?.tier || tier.tier === 'Unranked'
-                ? 'N/A'
-                : tier.tier;
+            const tierValue = tier.tier || 'N/A';
 
             const iconUrl = getModeIconUrl(gamemode);
 
