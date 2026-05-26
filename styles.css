@@ -565,8 +565,9 @@ footer a {
   padding: 0.25rem 0.15rem 0.75rem;
   scrollbar-width: thin;
   scrollbar-color: #0066ff #111;
-  width: 100%;
-  max-width: 100%;
+  width: 1000px;
+  margin: auto;
+  max-width: 90%;
   -webkit-overflow-scrolling: touch;
   overscroll-behavior-inline: contain;
 }
@@ -612,10 +613,12 @@ footer a {
   grid-template-columns: repeat(5, minmax(240px, 1fr));
   gap: 1.5rem;
   margin-top: 1rem;
+  margin-bottom: 2rem;
   max-height: 1000px;
   overflow-x: auto;
   overflow-y: visible;
   padding-right: 0.5rem;
+  padding-bottom: 4rem;
 }
 
 .tier-board.overall-active {
