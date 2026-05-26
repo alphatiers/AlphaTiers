@@ -10,6 +10,13 @@ body {
   color: #eee;
   line-height: 1.6;
   scroll-behavior: smooth;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+main {
+  flex: 1;
 }
 
 a {
@@ -557,8 +564,6 @@ footer a {
   padding-left: 0.1rem;
   scrollbar-width: thin;
   scrollbar-color: #0066ff #111;
-  width: 1000px;
-  margin: auto;
 }
 
 .mode-tabs::-webkit-scrollbar {
