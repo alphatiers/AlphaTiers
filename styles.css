@@ -571,7 +571,7 @@ footer a {
   scrollbar-color: #0066ff #111;
   width: 1000px;
   margin: auto;
-  max-width: 90%;
+  max-width: 100%;
   -webkit-overflow-scrolling: touch;
   overscroll-behavior-inline: contain;
 }
@@ -618,7 +618,6 @@ footer a {
   gap: 1.5rem;
   margin-top: 1rem;
   margin-bottom: 2rem;
-  max-height: 1000px;
   overflow-x: auto;
   overflow-y: visible;
   padding-right: 0.5rem;
@@ -1018,7 +1017,6 @@ footer a {
 
 .overall-ranking,
 .tier-board {
-  overflow: visible !important;
   position: relative !important;
   z-index: 1 !important;
 }
