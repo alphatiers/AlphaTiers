@@ -547,10 +547,30 @@ footer a {
 
 .mode-tabs {
   display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
+  flex-wrap: nowrap;
+  justify-content: flex-start;
   gap: 0.75rem;
   margin: 1.75rem 0 1rem;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding-bottom: 0.45rem;
+  padding-left: 0.1rem;
+  scrollbar-width: thin;
+  scrollbar-color: #0066ff #111;
+}
+
+.mode-tabs::-webkit-scrollbar {
+  height: 8px;
+}
+
+.mode-tabs::-webkit-scrollbar-track {
+  background: #111;
+  border-radius: 999px;
+}
+
+.mode-tabs::-webkit-scrollbar-thumb {
+  background: linear-gradient(90deg, #0066ff, #4aa3ff);
+  border-radius: 999px;
 }
 
 .mode-tab {
@@ -563,6 +583,8 @@ footer a {
   transition: all 0.2s ease;
   min-width: 110px;
   font-weight: 700;
+  white-space: nowrap;
+  flex: 0 0 auto;
 }
 
 .mode-tab.active,
